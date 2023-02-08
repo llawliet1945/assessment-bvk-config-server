@@ -1,0 +1,47 @@
+server:
+  port: 9030
+
+spring:
+  application:
+    name: api-gateway
+  datasource:
+    password: admin
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/assessment
+    hikari:
+      idle-timeout: 10000
+      maximum-pool-size: 10
+      max-lifetime: 30000
+      minimum-idle: 2
+  jpa:
+    properties:
+      hibernate:
+        format_sql: 'true'
+  main:
+    web-application-type: reactive
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods:
+            - GET
+            - POST
+            - PUT
+            - DELETE
+      default-filters:
+      - name: CustomFilter
+      routes:
+      - id: auth-service
+        uri: lb://user-service
+        predicates:
+        - Path=/auth/**
+        filters:
+        - StripPrefix=1
+    
+
+
+jwt:
+  secret: BvPHGM8C0ia4uOuxxqPD5DTbWC9F9TWvPStp3pb7ARo0oK2mJ3pd3YG4lxA9i8bj6OTbadwezxgeEByY
